@@ -7,12 +7,20 @@ body {
 canvas {
     margin: auto;
 }
+button{
+    font-size: 100%;
+    padding: 1em;
+    border: solid 5px black;
+}
 .container{
     width: 70%;
     height:auto;
     min-height: 800px;
     display: block;
     margin: auto;
+}
+.controls{
+    background-color: #ffffffaa;
 }
 #p5Sketch{
     position: relative;

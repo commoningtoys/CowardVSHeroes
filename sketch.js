@@ -17,7 +17,7 @@ let cnv, flock;
 function setup() {
 	cnv = createCanvas(minimum(), minimum());
 	cnv.parent('p5Sketch');
-	flock = new Flock(30);
+	flock = new Flock(100);
 }
 
 function draw() {

@@ -6,13 +6,11 @@ class Agent {
      * @param {binary} behaviour tells if the agent is either a coward or a hero
      */
     constructor(x, y, behaviour) {
-        let posX = random(width);
         this.pos = createVector(x, y),
             this.r = 15, this.speed = 2, this.force = 0.7,
             this.target = createVector(x, y),
-            this.vel = createVector(),
-            this.acc = createVector(),
-            this.debug = createVector(),
+            this.vel = createVector(),//velocity
+            this.acc = createVector(),//acceleration
             this.friend, this.enemy,
             this.behaviour = behaviour;
     }
@@ -22,24 +20,37 @@ class Agent {
     show() {
         fill(255);
         stroke(0, 255, 0);
-        let theta = this.vel.heading() + PI/2; //add it later to see the direction of the agent
+        let theta = this.vel.heading(); //add it later to see the direction of the agent
         push();
         translate(this.pos.x, this.pos.y);
-        rotate(theta)
-        line(0, 0, 10, 10);
-        ellipse(0, 0, this.r);
+        rotate(theta);
+        beginShape()
+        for (let i = 0; i < 3; i++) {
+            let angle = map(i, 0, 3, 0, TWO_PI);
+            let x = this.r / 2 * cos(angle);
+            let y = this.r / 2 * sin(angle);
+            vertex(x, y);
+        }
+        endShape();
+        // rect(0, 0, this.r);
         pop();
-        stroke(0, 255, 0);
-        // line(this.pos.x, this.pos.y, this.friend.pos.x, this.friend.pos.y);
-        stroke(255, 0, 0);
-        // line(this.pos.x, this.pos.y, this.enemy.pos.x, this.enemy.pos.y);
+    }
+    /**
+     * shows the connection between agents and their enemy and friends 
+     * as well as the target they are aiming for
+     */
+    debug() {
+        let alpha = 100;
+        strokeWeight(2);
+        stroke(0, 255, 0, alpha);
+        line(this.pos.x, this.pos.y, this.friend.pos.x, this.friend.pos.y);
+        stroke(255, 0, 0, alpha);
+        line(this.pos.x, this.pos.y, this.enemy.pos.x, this.enemy.pos.y);
+        stroke(0, 255, 255, alpha);
+        line(this.pos.x, this.pos.y, this.target.x, this.target.y);
+        noStroke();
         fill(255, 255, 0);
-        stroke(255, 0, 255);
-        line(this.friend.pos.x, this.friend.pos.y, this.enemy.pos.x, this.enemy.pos.y)
-
-        stroke(0, 255, 255);
-        line(this.pos.x, this.pos.y, this.debug.x, this.debug.y)
-        ellipse(this.debug.x, this.debug.y, 10);
+        ellipse(this.target.x, this.target.y, 10);
     }
     /**
      * update the agent position according to vector math
@@ -53,13 +64,13 @@ class Agent {
         // Reset accelertion to 0 each cycle
         this.acc.mult(0);
         this.target = this.setTarget(this.behaviour);
-        // this.setTarget(this.behaviour);
+        this.edge();
     }
     /**
      * Sets the enemy and the friend of an agent
      * @param {Array} flock Array of agents
      */
-    setFriendAndEnemy(flock) {
+    setFriendAndEnemy(flock) {//NEEDS REFACTORING
         // the agent looks for a friend and an enemy.
         // the enemy and the friend can't be the same agent
         // also need to exclude the agent himself
@@ -80,38 +91,44 @@ class Agent {
             }
         }
     }
-    setTarget(behaviour) {
-        if (behaviour > 0) {
-            let sum = p5.Vector.add(this.friend.pos, this.enemy.pos);
-            this.debug = sum.div(2);
-        } else {
-            let radius = 50;
-            // Our Formula
-            // x = x1 + t * dx
-            // y = y1 + t * dy
-            // dx = x2 - x1;
-            // dy = y2 - y1;
-            let v1 = this.enemy.pos;
-            let v2 = this.friend.pos
-            let dx = v2.x - v1.x;
-            let dy = v2.y - v1.y;
-            let distance = p5.Vector.dist(v1, v2);
-            //normalization
-            dx /= distance;
-            dy /= distance;
-            let x = v1.x - radius * dx;
-            let y = v1.y - radius * dy;
-            this.debug = createVector(x, y);
-        }
-        return this.debug;
-    }
     /**
-     * set a new this.target for the agent
-     * @param {PVector} p - vector element of the this.pos to reach
+     * 
+     * @param {value} behaviour 
+     * @returns the position that the agent should reach according to his behaviour
      */
-    settarget(p) {
-        this.target = p;
-        // this.target.add(p);
+    setTarget(behaviour) {
+        // Our Formula to find a third point 
+        // on a line given two points 
+        // x = x1 +/- distance * dx
+        // y = y1 +/- distance * dy
+        // + or - define if the new point is 
+        // between the two points (+) or (HERO)
+        // or outside (-) (COWARD)
+        // how to calculate dx & dy
+        // dx = x2 - x1;
+        // dy = y2 - y1;
+        // normalize the values
+        // dx /= distance;
+        // dy /= distance;
+        let v1 = this.enemy.pos;
+        let v2 = this.friend.pos;
+        let dx = v2.x - v1.x;
+        let dy = v2.y - v1.y;
+        let distance = p5.Vector.dist(v1, v2);
+        //normalization
+        dx /= distance;
+        dy /= distance;
+        //(behaviour == 0 ? -1 : 1) short notation for if statement
+        let x = v1.x + ((distance / 2) * (behaviour == 0 ? -1 : 1)) * dx;
+        let y = v1.y + ((distance / 2) * (behaviour == 0 ? -1 : 1)) * dy;
+        return createVector(x, y);
+    }
+    edge() {
+        if (this.pos.x < 0) this.pos.x = width;
+        if (this.pos.y < 0) this.pos.y = height;
+        if (this.pos.x > width) this.pos.x = 0;
+        if (this.pos.y > height) this.pos.y = 0;
+
     }
     /**
      * returns the radius of the agent

@@ -1,25 +1,55 @@
-let counter = 0;
 class Flock {
-
+    /**
+     * 
+     * @param {value} num number of agents
+     */
     constructor(num) {
-        this.mouse = createVector();
+        this.debug = false;
         this.agents = [];
         for (let i = 0; i < num; i++) {
-            this.agents.push(new Agent(random(100, width - 100), random(100, height - 100), floor(random(2))));
+            this.agents.push(new Agent(random(100, width - 100), random(100, height - 100), 0));
         }
         for (let agent of this.agents) {
             agent.setFriendAndEnemy(this.agents);
         }
     }
+    /**
+     * show the agents
+     */
     show() {
         for (let agent of this.agents) {
+            if(this.debug)agent.debug();
             agent.show();
         }
     }
+    /**
+     * update the agents
+     */
     update() {
         for (let agent of this.agents) {
             agent.applyBehaviors(this.agents);
             agent.update();
+        }
+    }
+    setForce(val){
+        for (let agent of this.agents)agent.force = val;
+    }
+    setSpeed(val){
+        for (let agent of this.agents)agent.speed = val;
+    }
+    setDebug(){
+        this.debug = !this.debug
+    }
+    setAllCowards() {
+        for (let agent of this.agents) agent.behaviour = 0;
+    }
+    setAllHeroes() {
+        for (let agent of this.agents) agent.behaviour = 1;
+    }
+    setAllRandom() {
+        for (let agent of this.agents) {
+            let val = floor(random(2));
+            agent.behaviour = val;
         }
     }
 }
