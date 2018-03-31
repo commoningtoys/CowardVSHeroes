@@ -36,6 +36,7 @@ class Flock {
     }
     setSpeed(val){
         for (let agent of this.agents)agent.speed = val;
+        console.log(val);
     }
     setDebug(){
         this.debug = !this.debug
@@ -46,10 +47,11 @@ class Flock {
     setAllHeroes() {
         for (let agent of this.agents) agent.behaviour = 1;
     }
-    setAllRandom() {
+    setRandomSeed(val) {
         for (let agent of this.agents) {
-            let val = floor(random(2));
-            agent.behaviour = val;
+            random(100) < val ? agent.behaviour = 1 : agent.behaviour = 0;
+            // let val = floor(random(2));
+            // agent.behaviour = val;
         }
     }
 }
