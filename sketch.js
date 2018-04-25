@@ -17,11 +17,11 @@ let cnv, flock;
 function setup() {
 	cnv = createCanvas(minimum(), minimum());
 	cnv.parent('p5Sketch');
-	flock = new Flock(10);
+	flock = new Flock(100);
 }
 
 function draw() {
-	background(0);
+	background(51);
 	flock.update();
 	flock.show();
 }

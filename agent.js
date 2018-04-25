@@ -7,7 +7,7 @@ class Agent {
      */
     constructor(x, y, behaviour) {
         this.pos = createVector(x, y),
-            this.r = 15, this.speed = 2, this.force = 0.7,
+            this.r = 10, this.speed = 2, this.force = 0.7,
             this.target = createVector(x, y),
             this.vel = createVector(),//velocity
             this.acc = createVector(),//acceleration
@@ -18,8 +18,9 @@ class Agent {
      * show the agent as circle
      */
     show() {
-        fill(255);
-        stroke(0, 255, 0);
+        fill(this.behaviour == 1 ? color(255, 0, 255) : color(0, 255, 255));
+        // stroke(0, 255, 0);
+        noStroke();
         let theta = this.vel.heading(); //add it later to see the direction of the agent
         push();
         translate(this.pos.x, this.pos.y);
@@ -27,11 +28,11 @@ class Agent {
         beginShape()
         for (let i = 0; i < 3; i++) {
             let angle = map(i, 0, 3, 0, TWO_PI);
-            let x = this.r / 2 * cos(angle);
+            let x = this.r * cos(angle);
             let y = this.r / 2 * sin(angle);
             vertex(x, y);
         }
-        endShape();
+        endShape(CLOSE);
         // rect(0, 0, this.r);
         pop();
     }
@@ -41,7 +42,7 @@ class Agent {
      */
     debug() {
         let alpha = 100;
-        strokeWeight(2);
+        strokeWeight(1);
         stroke(0, 255, 0, alpha);
         line(this.pos.x, this.pos.y, this.friend.pos.x, this.friend.pos.y);
         stroke(255, 0, 0, alpha);
@@ -50,7 +51,7 @@ class Agent {
         line(this.pos.x, this.pos.y, this.target.x, this.target.y);
         noStroke();
         fill(255, 255, 0);
-        ellipse(this.target.x, this.target.y, 10);
+        ellipse(this.target.x, this.target.y, 4);
     }
     /**
      * update the agent position according to vector math
@@ -130,6 +131,7 @@ class Agent {
         if (this.pos.y > height) this.pos.y = 0;
 
     }
+
     /**
      * returns the radius of the agent
      */
