@@ -20,29 +20,48 @@
 <body>
 	<div class="menu">
 		<table>
-			<tr>
-				<button onclick="flock.setDebug()" touchstart="flock.setDebug()">SHOW DEBUG</button>
-			</tr>
-			<tr>
-				<button onclick="flock.setAllCowards()">ALL COWARDS</button>
-			</tr>
-			<tr>
-				<button onclick="flock.setAllHeroes()">ALL HEROES</button>
-			</tr>
-			<tr>
-				<button onclick="flockRandomSeed()">RANDOMIZE</button>
-			</tr>
+			<th>
+				<tr>
+					<button onclick="flock.setDebug()" touchstart="flock.setDebug()">SHOW DEBUG</button>
+				</tr>
+			</th>
+			<th>
+				<tr>
+					<button onclick="flock.setAllCowards()">ALL COWARDS</button>
+				</tr>
+			</th>
+			<th>
+				<tr>
+					<button onclick="flock.setAllHeroes()">ALL HEROES</button>
+				</tr>
+			</th>
+			<br>
+			<th>
+				<tr>
+					<button onclick="flockRandomSeed()">RANDOMIZE</button>
+				</tr>
+			</th>
 			<tr>
 				<th>
 					<input id="inputSpeed" type="range" min="1" max="10" step="0.2" value="2" onchange="speed()">
 				</th>
-				<th></th>
+			</tr>
+			<tr>
+				<th>SPEED:
+					<span id="speed">2</span>
+				</th>
 			</tr>
 			<tr>
 				<th>
 					<input id="inputRandomSeed" type="range" min="1" max="100" step="1" value="50" onchange="flockRandomSeed()">
 				</th>
-				<th></th>
+			</tr>
+			<tr>
+				<th>COWARDS:
+					<span id="cowards"></span>
+					<br> HEROES:
+					<span id="heroes"></span>
+				</th>
 			</tr>
 		</table>
 	</div>

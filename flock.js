@@ -18,7 +18,7 @@ class Flock {
      */
     show() {
         for (let agent of this.agents) {
-            if(this.debug)agent.debug();
+            if (this.debug) agent.debug();
             agent.show();
         }
     }
@@ -31,30 +31,48 @@ class Flock {
             agent.update();
         }
     }
-    setForce(val){
-        for (let agent of this.agents)agent.force = val;
+    setForce(val) {
+        for (let agent of this.agents) agent.force = val;
     }
-    setSpeed(val){
-        for (let agent of this.agents)agent.speed = val;
+    setSpeed(val) {
+        for (let agent of this.agents) agent.speed = val;
         console.log(val);
     }
-    setDebug(){
+    setDebug() {
         this.debug = !this.debug
     }
     setAllCowards() {
         for (let agent of this.agents) agent.behaviour = 0;
+        updateMenu()
     }
     setAllHeroes() {
         for (let agent of this.agents) agent.behaviour = 1;
+        updateMenu()
     }
-    setTriangle(){
+    setTriangle() {
         for (let agent of this.agents) agent.behaviour = 2;
     }
     setRandomSeed(val) {
         for (let agent of this.agents) {
             random(100) < val ? agent.behaviour = 1 : agent.behaviour = 0;
-            // let val = floor(random(2));
-            // agent.behaviour = val;
         }
+    }
+
+    getAgentsNumber() {
+        let heroesAgent = 0;
+        let cowardsAgent = 0;
+        for (let agent of this.agents) {
+            if (agent.behaviour == 0) {
+                //count cowards
+                cowardsAgent++;
+            } else if (agent.behaviour == 1) {
+                //count Heores
+                heroesAgent++;
+            }
+        }
+        return {
+            heroes: heroesAgent,
+            cowards: cowardsAgent
+        };
     }
 }
