@@ -17,16 +17,36 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 
-<body onresize="resizeSketch()">
+<body>
+	<div class="menu">
+		<table>
+			<tr>
+				<button onclick="flock.setDebug()" touchstart="flock.setDebug()">SHOW DEBUG</button>
+			</tr>
+			<tr>
+				<button onclick="flock.setAllCowards()">ALL COWARDS</button>
+			</tr>
+			<tr>
+				<button onclick="flock.setAllHeroes()">ALL HEROES</button>
+			</tr>
+			<tr>
+				<button onclick="flockRandomSeed()">RANDOMIZE</button>
+			</tr>
+			<tr>
+				<th>
+					<input id="inputSpeed" type="range" min="1" max="10" step="0.2" value="2" onchange="speed()">
+				</th>
+				<th></th>
+			</tr>
+			<tr>
+				<th>
+					<input id="inputRandomSeed" type="range" min="1" max="100" step="1" value="50" onchange="flockRandomSeed()">
+				</th>
+				<th></th>
+			</tr>
+		</table>
+	</div>
 	<div id="myContainer" class="container">
-		<div class="controls">
-			<button onclick="flock.setDebug()" touchstart="flock.setDebug()">SHOW DEBUG</button>
-			<button onclick="flock.setAllCowards()">ALL COWARDS</button>
-			<button onclick="flock.setAllHeroes()">ALL HEROES</button>
-			<button onclick="flockRandomSeed()">RANDOMIZE</button>
-			<input id="inputSpeed" type="range" min="1" max="10" step="0.2" value="2" onchange="speed()">
-			<input id="inputRandomSeed" type="range" min="1" max="100" step="1" value="50" onchange="flockRandomSeed()">
-		</div>
 		<div id="p5Sketch"></div>
 	</div>
 	<script>

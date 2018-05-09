@@ -10,16 +10,21 @@ canvas {
 button{
     font-size: 100%;
     padding: 1em;
-    border: solid 5px black;
+    border-bottom: solid 5px black;
 }
 .container{
+    right: 0px;
     width: 70%;
     height:auto;
     min-height: 800px;
     display: block;
-    margin: auto;
+    margin: auto auto auto 200px;
+    overflow-y: scroll;
 }
-.controls{
+.menu{
+    position: fixed;
+    left: 0px;
+    width: 200px;
     background-color: #ffffffaa;
 }
 #p5Sketch{

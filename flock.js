@@ -47,6 +47,9 @@ class Flock {
     setAllHeroes() {
         for (let agent of this.agents) agent.behaviour = 1;
     }
+    setTriangle(){
+        for (let agent of this.agents) agent.behaviour = 2;
+    }
     setRandomSeed(val) {
         for (let agent of this.agents) {
             random(100) < val ? agent.behaviour = 1 : agent.behaviour = 0;

@@ -44,9 +44,10 @@ class Agent {
         let alpha = 100;
         strokeWeight(1);
         stroke(0, 255, 0, alpha);
-        line(this.pos.x, this.pos.y, this.friend.pos.x, this.friend.pos.y);
-        stroke(255, 0, 0, alpha);
-        line(this.pos.x, this.pos.y, this.enemy.pos.x, this.enemy.pos.y);
+        noFill();
+        // line(this.pos.x, this.pos.y, this.friend.pos.x, this.friend.pos.y);
+        // stroke(255, 0, 0, alpha);
+        // line(this.pos.x, this.pos.y, this.enemy.pos.x, this.enemy.pos.y);
         stroke(0, 255, 255, alpha);
         line(this.pos.x, this.pos.y, this.target.x, this.target.y);
         noStroke();
@@ -119,9 +120,29 @@ class Agent {
         //normalization
         dx /= distance;
         dy /= distance;
-        //(behaviour == 0 ? -1 : 1) short notation for if statement
-        let x = v1.x + ((distance / 2) * (behaviour == 0 ? -1 : 1)) * dx;
-        let y = v1.y + ((distance / 2) * (behaviour == 0 ? -1 : 1)) * dy;
+        let x = 0;
+        let y = 0;
+        // needs refactoring
+        if (behaviour == 0) {
+            // here we calculate the point in ountside two agents
+            x = v1.x + ((distance / 2) * -1) * dx;
+            y = v1.y + ((distance / 2) * -1) * dy;
+        } else if (behaviour == 1) {
+            x = v1.x + (distance / 2) * dx;
+            y = v1.y + (distance / 2) * dy;
+            
+        } else if (behaviour == 2) {
+            // here we calculate the point that makes a triangle given the other two agents
+            // here we calculate the point in between two agents
+            let midX = v1.x + (distance / 2) * dx;
+            let midY = v1.y + (distance / 2) * dy;
+            let r = distance / 2;
+            let angle = PI/2;
+            x = midX + r * cos(angle);
+            y = midY + r * sin(angle);
+
+        }
+
         return createVector(x, y);
     }
     edge() {
