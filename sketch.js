@@ -1,11 +1,12 @@
 /**
  * 
- * @returns the minimum between width and height of the contained div
+ * @returns
  */
 function minimum(){
 	let cnvDiv = document.getElementById('myContainer');
 	let w = cnvDiv.offsetWidth;
 	let h = cnvDiv.offsetHeight;
+	console.log(cnvDiv.offsetHeight)
 	console.log(w, h);
 	return{
 		width: w,
@@ -20,7 +21,7 @@ let cnv, flock;
 function setup() {
 	cnv = createCanvas(minimum().width, minimum().height);
 	cnv.parent('p5Sketch');
-	flock = new Flock(300);
+	flock = new Flock(150);
 	updateMenu();
 }
 

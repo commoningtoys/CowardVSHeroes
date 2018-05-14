@@ -1,18 +1,47 @@
 class Agent {
     /**
      * agent constructor
-     * @param {float} x pos on the x axis
-     * @param {float} y pos on y axis
-     * @param {binary} behaviour tells if the agent is either a coward or a hero
+     * @param {Number} x pos on the x axis
+     * @param {Number} y pos on y axis
+     * @param {Number} behaviour tells if the agent is either a coward or a hero
      */
     constructor(x, y, behaviour) {
-        this.pos = createVector(x, y),
-            this.r = 10, this.speed = 2, this.force = 0.7,
-            this.target = createVector(x, y),
-            this.vel = createVector(),//velocity
-            this.acc = createVector(),//acceleration
-            this.friend, this.enemy,
-            this.behaviour = behaviour;
+        this.pos = createVector(x, y);
+        this.r = 15;
+        this.speed = 2;
+        this.force = 0.7;
+        this.target = createVector(x, y);
+        this.vel = createVector();//velocity
+        this.acc = createVector();//acceleration
+        this.friend;
+        this.enemy;
+        this.behaviour = behaviour;
+        this.trail = [];
+    }
+    /**
+ * Sets the enemy and the friend of an agent
+ * @param {Array} flock Array of agents
+ */
+    setFriendAndEnemy(flock) {//NEEDS REFACTORING
+        // the agent looks for a friend and an enemy.
+        // the enemy and the friend can't be the same agent
+        // also need to exclude the agent himself
+        // let's search for friends
+        while (true) {
+            let randomIndex = floor(random(flock.length));
+            if (flock[randomIndex] !== this) {
+                this.friend = flock[randomIndex];
+                break;
+            }
+        }
+        // we do the same searching for the enemy
+        while (true) {
+            let randomIndex = floor(random(flock.length));
+            if (flock[randomIndex] !== this && flock[randomIndex] !== this.friend) {
+                this.enemy = flock[randomIndex];
+                break;
+            }
+        }
     }
     /**
      * show the agent as circle
@@ -42,7 +71,7 @@ class Agent {
      */
     debug() {
         let alpha = 100;
-        strokeWeight(1);
+        strokeWeight(2);
         stroke(0, 255, 0, alpha);
         noFill();
         // line(this.pos.x, this.pos.y, this.friend.pos.x, this.friend.pos.y);
@@ -53,45 +82,13 @@ class Agent {
         noStroke();
         fill(255, 255, 0);
         ellipse(this.target.x, this.target.y, 4);
-    }
-    /**
-     * update the agent position according to vector math
-     */
-    update() {
-        // Update this.velocity
-        this.vel.add(this.acc);
-        // Limit this.speed
-        this.vel.limit(this.speed);
-        this.pos.add(this.vel);
-        // Reset accelertion to 0 each cycle
-        this.acc.mult(0);
-        this.target = this.setTarget(this.behaviour);
-        this.edge();
-    }
-    /**
-     * Sets the enemy and the friend of an agent
-     * @param {Array} flock Array of agents
-     */
-    setFriendAndEnemy(flock) {//NEEDS REFACTORING
-        // the agent looks for a friend and an enemy.
-        // the enemy and the friend can't be the same agent
-        // also need to exclude the agent himself
-        // let's search for friends
-        while (true) {
-            let randomIndex = floor(random(flock.length));
-            if (flock[randomIndex] !== this) {
-                this.friend = flock[randomIndex];
-                break;
-            }
+        noFill();
+        stroke(255, 50);
+        beginShape();
+        for (const p of this.trail) {
+            vertex(p.x, p.y);
         }
-        // we do the same searching for the enemy
-        while (true) {
-            let randomIndex = floor(random(flock.length));
-            if (flock[randomIndex] !== this && flock[randomIndex] !== this.friend) {
-                this.enemy = flock[randomIndex];
-                break;
-            }
-        }
+        endShape();
     }
     /**
      * 
@@ -130,14 +127,14 @@ class Agent {
         } else if (behaviour == 1) {
             x = v1.x + (distance / 2) * dx;
             y = v1.y + (distance / 2) * dy;
-            
+
         } else if (behaviour == 2) {
             // here we calculate the point that makes a triangle given the other two agents
             // here we calculate the point in between two agents
             let midX = v1.x + (distance / 2) * dx;
             let midY = v1.y + (distance / 2) * dy;
             let r = distance / 2;
-            let angle = PI/2;
+            let angle = PI / 2;
             x = midX + r * cos(angle);
             y = midY + r * sin(angle);
 
@@ -150,7 +147,6 @@ class Agent {
         if (this.pos.y < 0) this.pos.y = height;
         if (this.pos.x > width) this.pos.x = 0;
         if (this.pos.y > height) this.pos.y = 0;
-
     }
 
     /**
@@ -163,6 +159,24 @@ class Agent {
     targetReached() {
         let d = p5.Vector.dist(this.pos, this.target);
         return (d < 1);
+    }    /**
+    * update the agent position according to vector math
+    */
+    update() {
+        // Update this.velocity
+        this.vel.add(this.acc);
+        // Limit this.speed
+        this.vel.limit(this.speed);
+        this.pos.add(this.vel);
+        // Reset accelertion to 0 each cycle
+        this.acc.mult(0);
+        this.target = this.setTarget(this.behaviour);
+        this.edge();
+        // here we add the position to the trail Array
+        this.trail.push(createVector(this.pos.x, this.pos.y));
+        // console.log(this.trail);
+        // the trail contains only 50 positions
+        if (this.trail.length > 50) this.trail.splice(0, 1);
     }
     // applyForce(force) {
     //     // We could add mass here if we want A = F / M
