@@ -1,22 +1,4 @@
-/**
- * 
- * @returns
- */
-function minimum(){
-	let cnvDiv = document.getElementById('myContainer');
-	let w = cnvDiv.offsetWidth;
-	let h = cnvDiv.offsetHeight;
-	console.log(cnvDiv.offsetHeight)
-	console.log(w, h);
-	return{
-		width: w,
-		height: h
-	};
-}
-function windowResized(){
-	let canvasWidth = minimum();
-	resizeCanvas(minimum().width, minimum().height);
-}
+const MENU_WIDTH = 200;
 let cnv, flock;
 function setup() {
 	cnv = createCanvas(minimum().width, minimum().height);
@@ -33,7 +15,7 @@ function draw() {
 	flock.show();
 }
 
-function speed(){
+function speed() {
 	let speed = document.getElementById('inputSpeed').value;
 	speed = parseFloat(speed);
 	console.log(speed);
@@ -41,16 +23,41 @@ function speed(){
 	updateMenu();
 }
 
-function flockRandomSeed(){
-	let seed = document.getElementById('inputRandomSeed').value;
+function flockRandomSeed() {
+	// let seed = document.getElementById('inputRandomSeed').value;
+	let seed = floor(random(100));
+	flock.setRandomSeed(seed);
+	updateMenu();
+	document.getElementById('setAgents').value = seed;
+}
+
+function flockSetAgents() {
+	let seed = document.getElementById('setAgents').value;
 	seed = parseFloat(seed);
-	console.log(seed);
 	flock.setRandomSeed(seed);
 	updateMenu();
 }
 
-function updateMenu(){
+function updateMenu() {
 	document.getElementById('speed').innerHTML = document.getElementById('inputSpeed').value;
 	document.getElementById('cowards').innerHTML = flock.getAgentsNumber().cowards;
 	document.getElementById('heroes').innerHTML = flock.getAgentsNumber().heroes;
+}
+
+/**
+ * 
+ * @returns
+ */
+function minimum() {
+	let cnvDiv = document.getElementById('myContainer');
+	let w = cnvDiv.offsetWidth - MENU_WIDTH;
+	let h = cnvDiv.offsetHeight;
+	return {
+		width: w,
+		height: h
+	};
+}
+function windowResized() {
+	let canvasWidth = minimum();
+	resizeCanvas(minimum().width, minimum().height);
 }
