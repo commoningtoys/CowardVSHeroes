@@ -58,6 +58,5 @@ function minimum() {
 	};
 }
 function windowResized() {
-	let canvasWidth = minimum();
 	resizeCanvas(minimum().width, minimum().height);
 }

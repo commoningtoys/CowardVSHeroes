@@ -5,10 +5,6 @@ body {
     font-size: 70%;
     font-family: Arial, Helvetica, sans-serif;
 }
-
-canvas {
-    /* padding: 5px; */
-}
 button{
     padding: 0.7em;
     border: solid 3px black;
@@ -64,7 +60,7 @@ button{
 @media screen and (orientation:portrait) {
 
     #warning {
-        display: block;
+        /* display: block; */
       /* -ms-transform: rotate(-90deg);
       -webkit-transform: rotate(-90deg);
       transform: rotate(-90deg);
