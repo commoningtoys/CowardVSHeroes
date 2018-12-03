@@ -42,15 +42,15 @@ class Flock {
         this.debug = !this.debug
     }
     setAllCowards() {
-        for (let agent of this.agents) agent.behaviour = 0;
+        for (let agent of this.agents) agent.behaviour = BEHAVIOURS[0];
         updateMenu()
     }
     setAllHeroes() {
-        for (let agent of this.agents) agent.behaviour = 1;
+        for (let agent of this.agents) agent.behaviour = BEHAVIOURS[1];
         updateMenu()
     }
     setTriangle() {
-        for (let agent of this.agents) agent.behaviour = 2;
+        for (let agent of this.agents) agent.behaviour = BEHAVIOURS[2];
     }
     randomize() {
         for (const agent of this.agents) {
