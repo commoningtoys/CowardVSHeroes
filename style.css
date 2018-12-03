@@ -5,10 +5,9 @@ body {
     font-size: 70%;
     font-family: Arial, Helvetica, sans-serif;
 }
-button{
-    padding: 0.7em;
-    border: solid 3px black;
-    margin: 5px
+
+canvas {
+    /* padding: 5px; */
 }
 #myContainer{
     right: 0px;
@@ -25,13 +24,30 @@ button{
     background-color: #ffffffaa;
     padding: 5px;
 }
+
+.menu button{
+    padding: 0.7em;
+    border: solid 3px black;
+    margin: 5px;
+    box-shadow: #00f 2px 2px;
+}
+
+.menu button:hover{
+    border-radius: 50px;
+    background-color: #ff0;
+    box-shadow: #00f 4px 4px;
+}
+
 #p5Sketch{
-    position: relative;
-    display: block;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+    /* display: block;
     margin: auto;
     min-width: 250px;
     min-height: 250px;
-    width: auto;
+    width: auto; */
 }
 
 #warning {

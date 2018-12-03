@@ -1,16 +1,39 @@
-const MENU_WIDTH = 200;
-let cnv, flock;
+/**
+ * 
+ * @returns
+ */
+function minimum(){
+	let cnvDiv = document.getElementById('myContainer');
+	let w = cnvDiv.offsetWidth;
+	let h = cnvDiv.offsetHeight;
+	console.log(cnvDiv.offsetHeight)
+	console.log(w, h);
+	return{
+		width: w,
+		height: h
+	};
+}
+function windowResized(){
+	resizeCanvas(innerWidth, innerHeight);
+}
+
+
+const BEHAVIOURS = ['cowards', 'heroes', 'triangle'];
+
+let cnv;
+let flock;
 function setup() {
-	cnv = createCanvas(minimum().width, minimum().height);
+	// cnv = createCanvas(minimum().width, minimum().height);
+	cnv = createCanvas(innerWidth, innerHeight);
 	cnv.parent('p5Sketch');
-	flock = new Flock(150);
+	flock = new Flock(50, BEHAVIOURS[2]);
 	updateMenu();
 }
 
 function draw() {
-	// background(51);
-	fill(51);
-	rect(0, 0, width, height);
+	background(51);
+	// fill(0, 20);
+	// rect(0, 0, width, height);
 	flock.update();
 	flock.show();
 }
@@ -38,25 +61,25 @@ function flockSetAgents() {
 	updateMenu();
 }
 
-function updateMenu() {
-	document.getElementById('speed').innerHTML = document.getElementById('inputSpeed').value;
-	document.getElementById('cowards').innerHTML = flock.getAgentsNumber().cowards;
-	document.getElementById('heroes').innerHTML = flock.getAgentsNumber().heroes;
+function setAgents(){
+	// const cowards = document.getElementById('cowards');
+	// const heroes = document.getElementById('heroes');
+	// const triangle = document.getElementById('triangle');
+	const arr = [];
+	let sum = 0;
+	for (const b of BEHAVIOURS) {
+		const value = document.getElementById(b).value;
+		for(let i = 0; i < value; i++){
+			arr.push(b);
+		}
+	}
+	console.log(arr);
+	flock.setAgents(arr);
 }
 
-/**
- * 
- * @returns
- */
-function minimum() {
-	let cnvDiv = document.getElementById('myContainer');
-	let w = cnvDiv.offsetWidth - MENU_WIDTH;
-	let h = cnvDiv.offsetHeight;
-	return {
-		width: w,
-		height: h
-	};
-}
-function windowResized() {
-	resizeCanvas(minimum().width, minimum().height);
+function updateMenu(){
+	document.getElementById('speed').innerText = document.getElementById('inputSpeed').value;
+	document.getElementById('cowards').innerText = flock.getAgentsNumber().cowards;
+	document.getElementById('heroes').innerText = flock.getAgentsNumber().heroes;
+	document.getElementById('triangle').innerText = flock.getAgentsNumber().triangle;
 }
