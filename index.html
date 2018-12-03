@@ -25,6 +25,7 @@
 		</div>
 	</div>
 	<div class="menu">
+		<!-- <button id="show-hide">SHOW</button> <br> -->
 		<table>
 			<th>
 				<tr>
@@ -41,17 +42,17 @@
 					<button onclick="flock.setAllHeroes()">ALL HEROES</button>
 				</tr>
 			</th>
+			<th>
+				<tr>
+					<button onclick="flock.setTriangle()">TRIANGLE MODE</button>
+				</tr>
+			</th>
 			<br>
 			<th>
 				<tr>
-					<button onclick="flockRandomSeed()">RANDOMIZE</button>
+					<button onclick="flock.randomize(); updateMenu()">RANDOMIZE</button>
 				</tr>
 			</th>
-			<tr>
-				<th>
-					<input id="inputSpeed" type="range" min="1" max="10" step="0.2" value="2" onchange="speed()">
-				</th>
-			</tr>
 			<tr>
 				<th>SPEED:
 					<span id="speed">2</span>
@@ -59,7 +60,7 @@
 			</tr>
 			<tr>
 				<th>
-					<input id="inputRandomSeed" type="range" min="1" max="100" step="1" value="50" onchange="flockRandomSeed()">
+					<input id="inputSpeed" type="range" min="1" max="10" step="0.2" value="2" onchange="speed()">
 				</th>
 			</tr>
 			<tr>
@@ -67,13 +68,13 @@
 					<span id="cowards"></span>
 					<br> HEROES:
 					<span id="heroes"></span>
+					<br> TRIANGLE: 
+					<span id="triangle"></span>
 				</th>
 			</tr>
 		</table>
 	</div>
-	<div id="myContainer">
-		<div id="p5Sketch"></div>
-	</div>
+	<div id="p5Sketch"></div>
 	<script>
 		// $(document).on('click touchstart', '.controls', (e) => {
 		// 	// e.onclick;

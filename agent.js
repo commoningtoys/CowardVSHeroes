@@ -47,7 +47,22 @@ class Agent {
      * show the agent as circle
      */
     show() {
-        fill(this.behaviour == 1 ? color(255, 0, 255) : color(0, 255, 255));
+        switch (this.behaviour) {
+            case BEHAVIOURS[0]:
+                fill(0, 255, 255);
+                break;
+            case BEHAVIOURS[1]:
+                fill(255, 0, 255);
+                break;
+            case BEHAVIOURS[2]:
+                fill(255, 155, 0);
+                break;
+
+            default:
+            fill(255);
+                break;
+        }
+        // fill(this.behaviour == 1 ? color(255, 0, 255) : color(0, 255, 255));
         // stroke(0, 255, 0);
         noStroke();
         let theta = this.vel.heading(); //add it later to see the direction of the agent
@@ -64,24 +79,6 @@ class Agent {
         endShape(CLOSE);
         // rect(0, 0, this.r);
         pop();
-    }
-    /**
-     * shows the connection between agents and their enemy and friends 
-     * as well as the target they are aiming for
-     */
-    debug() {
-        let alpha = 100;
-        strokeWeight(2);
-        stroke(0, 255, 0, alpha);
-        noFill();
-        // line(this.pos.x, this.pos.y, this.friend.pos.x, this.friend.pos.y);
-        // stroke(255, 0, 0, alpha);
-        // line(this.pos.x, this.pos.y, this.enemy.pos.x, this.enemy.pos.y);
-        stroke(0, 255, 255, alpha);
-        line(this.pos.x, this.pos.y, this.target.x, this.target.y);
-        noStroke();
-        fill(255, 255, 0);
-        ellipse(this.target.x, this.target.y, 4);
         noFill();
         stroke(255, 50);
         beginShape();
@@ -89,6 +86,22 @@ class Agent {
             vertex(p.x, p.y);
         }
         endShape();
+    }
+    /**
+     * shows the connection between agents and their enemy and friends 
+     * as well as the target they are aiming for
+     */
+    debug() {
+        let alpha = 100;
+        stroke(0, 255, 0, alpha); // friend
+        line(this.pos.x, this.pos.y, this.friend.pos.x, this.friend.pos.y);
+        stroke(255, 0, 0, alpha); // enemy
+        line(this.pos.x, this.pos.y, this.enemy.pos.x, this.enemy.pos.y);
+        stroke(0, 255, 255, alpha); // target
+        line(this.pos.x, this.pos.y, this.target.x, this.target.y);
+        noStroke();
+        fill(255, 255, 0);
+        ellipse(this.target.x, this.target.y, 4);
     }
     /**
      * 
@@ -114,29 +127,27 @@ class Agent {
         let dx = v2.x - v1.x;
         let dy = v2.y - v1.y;
         let distance = p5.Vector.dist(v1, v2);
+        // console.log(distance);
         //normalization
         dx /= distance;
         dy /= distance;
         let x = 0;
         let y = 0;
         // needs refactoring
-        if (behaviour == 0) {
+        if (behaviour == BEHAVIOURS[0]) {
             // here we calculate the point in ountside two agents
             x = v1.x + ((distance / 2) * -1) * dx;
             y = v1.y + ((distance / 2) * -1) * dy;
-        } else if (behaviour == 1) {
+        } else if (behaviour == BEHAVIOURS[1]) {
             x = v1.x + (distance / 2) * dx;
             y = v1.y + (distance / 2) * dy;
 
-        } else if (behaviour == 2) {
-            // here we calculate the point that makes a triangle given the other two agents
-            // here we calculate the point in between two agents
-            let midX = v1.x + (distance / 2) * dx;
-            let midY = v1.y + (distance / 2) * dy;
-            let r = distance / 2;
-            let angle = PI / 2;
-            x = midX + r * cos(angle);
-            y = midY + r * sin(angle);
+        } else if (behaviour == BEHAVIOURS[2]) {
+
+            const result = calculate_third_point(v1.x, v1.y, v2.x, v2.y, distance, distance, 60);
+            x = result.Bx;
+            y = result.By;
+
 
         }
 
@@ -200,7 +211,7 @@ class Agent {
     // Separation
     // Method checks for nearby Agents and steers away
     separate(Agents) {
-        let desiredseparation = this.r * 1.2;
+        let desiredseparation = this.r * 1.5; // separate more if trianle mode?
         let sum = createVector();
         let count = 0;
         // For every boid in the system, check if it's too close
@@ -244,3 +255,58 @@ class Agent {
     }
 }
 
+/**
+ * Find the coordinates for the third point of a triangle.
+ *
+ * @param Ax - x coordinate value of first known point
+ * @param Ay - y coordinate value of first known point
+ * @param Cx - x coordinate value of second known point
+ * @param Cy - y coordinate value of second known point
+ * @param b - the length of side b
+ * @param c - the length of side c
+ * @param A - the angle of corner A
+ * @param alt - set to true to return the alternative solution.
+ * @returns {{Bx: *, By: *}}
+ */
+function calculate_third_point(Ax, Ay, Cx, Cy, b, c, A, alt) {
+
+    let Bx;
+    let By;
+    alt = typeof alt === 'undefined' ? false : alt;
+
+    //unit vector
+    uACx = (Cx - Ax) / b;
+    uACy = (Cy - Ay) / b;
+
+    if (alt) {
+
+        //rotated vector
+        uABx = uACx * Math.cos(toRadians(A)) - uACy * Math.sin(toRadians(A));
+        uABy = uACx * Math.sin(toRadians(A)) + uACy * Math.cos(toRadians(A));
+
+        //B position uses length of edge
+        Bx = Ax + c * uABx;
+        By = Ay + c * uABy;
+    }
+    else {
+        //vector rotated into another direction
+        uABx = uACx * Math.cos(toRadians(A)) + uACy * Math.sin(toRadians(A));
+        uABy = - uACx * Math.sin(toRadians(A)) + uACy * Math.cos(toRadians(A));
+
+        //second possible position
+        Bx = Ax + c * uABx;
+        By = Ay + c * uABy;
+    }
+
+    return { Bx: Bx, By: By };
+}
+
+/**
+ * Convert degrees to radians.
+ *
+ * @param angle
+ * @returns {number}
+ */
+function toRadians(angle) {
+    return angle * (Math.PI / 180);
+}
